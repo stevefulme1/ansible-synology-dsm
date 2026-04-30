@@ -1,0 +1,91 @@
+---
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install ansible-core~=2.16.0
+          pip install ansible-lint==24.12.2
+
+      - name: Run ansible-lint
+        run: ansible-lint --profile=production
+
+  sanity:
+    name: "Sanity (ansible-core ${{ matrix.ansible-core }}, Python ${{ matrix.python }})"
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ansible-core: "2.16"
+            python: "3.12"
+          - ansible-core: "2.17"
+            python: "3.12"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ansible_collections/stevefulme1/synology_dsm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install ansible-core
+        run: pip install ansible-core~=${{ matrix.ansible-core }}.0
+
+      - name: Run sanity tests
+        run: ansible-test sanity --docker -v --color
+        working-directory: ansible_collections/stevefulme1/synology_dsm
+
+  units:
+    name: "Unit tests (ansible-core ${{ matrix.ansible-core }}, Python ${{ matrix.python }})"
+    runs-on: ubuntu-latest
+    needs: sanity
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ansible-core: "2.16"
+            python: "3.12"
+          - ansible-core: "2.17"
+            python: "3.12"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: ansible_collections/stevefulme1/synology_dsm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install ansible-core
+        run: pip install ansible-core~=${{ matrix.ansible-core }}.0
+
+      - name: Run unit tests
+        run: ansible-test units --docker -v --color
+        working-directory: ansible_collections/stevefulme1/synology_dsm
