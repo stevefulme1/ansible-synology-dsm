@@ -1,0 +1,6 @@
+---
+releases:
+  0.1.0:
+    release_date: '2026-05-12'
+    changes:
+      release_summary: Initial release of stevefulme1.synology_dsm collection
