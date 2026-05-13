@@ -1,0 +1,18 @@
+---
+namespace: stevefulme1
+name: synology_dsm
+version: 0.1.0
+readme: README.md
+authors:
+  - Steve Fulmer
+description: Ansible collection for Synology DSM management
+license:
+  - GPL-3.0-or-later
+tags:
+  - synology
+  - dsm
+  - storage
+repository: https://github.com/stevefulme1/ansible-synology-dsm
+documentation: https://github.com/stevefulme1/ansible-synology-dsm
+homepage: https://github.com/stevefulme1/ansible-synology-dsm
+issues: https://github.com/stevefulme1/ansible-synology-dsm/issues

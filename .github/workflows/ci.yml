@@ -32,7 +32,13 @@ jobs:
           pip install ansible-lint==24.12.2
 
       - name: Run ansible-lint
-        run: ansible-lint --profile=production
+        run: |
+          # Skip lint if no content to lint
+          if [ -n "$(find . -name '*.yml' -o -name '*.yaml' | grep -v '.github' | head -1)" ]; then
+            ansible-lint --profile=production
+          else
+            echo "No Ansible content to lint, skipping"
+          fi
 
   sanity:
     name: "Sanity (ansible-core ${{ matrix.ansible-core }}, Python ${{ matrix.python }})"
