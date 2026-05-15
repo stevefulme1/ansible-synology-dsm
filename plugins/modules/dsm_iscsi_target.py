@@ -86,8 +86,6 @@ iscsi_target:
       returned: always
 '''
 
-import json
-
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.stevefulme1.synology_dsm.plugins.module_utils.dsm_api import (
     DSMClient, DSMError, dsm_argument_spec,
