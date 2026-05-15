@@ -15,7 +15,7 @@ description:
   - Supports managing group membership.
 version_added: "0.1.0"
 author:
-  - Steve Fulmer
+  - Steve Fulmer (@stevefulme1)
 options:
   name:
     description:

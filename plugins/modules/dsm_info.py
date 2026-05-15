@@ -16,7 +16,7 @@ description:
   - This module is read-only and does not modify any settings.
 version_added: "0.1.0"
 author:
-  - Steve Fulmer
+  - Steve Fulmer (@stevefulme1)
 extends_documentation_fragment:
   - stevefulme1.synology_dsm.dsm
 '''

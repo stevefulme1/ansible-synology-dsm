@@ -15,7 +15,7 @@ description:
   - Supports setting volume path, description, recycle bin, and encryption options.
 version_added: "0.1.0"
 author:
-  - Steve Fulmer
+  - Steve Fulmer (@stevefulme1)
 options:
   name:
     description:

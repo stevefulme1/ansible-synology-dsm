@@ -15,7 +15,7 @@ description:
   - Supports setting password, description, email, and account status.
 version_added: "0.1.0"
 author:
-  - Steve Fulmer
+  - Steve Fulmer (@stevefulme1)
 options:
   name:
     description:
@@ -32,7 +32,6 @@ options:
     description:
       - Password for the user. Required when creating a new user.
     type: str
-    no_log: true
   description:
     description:
       - Description for the user account.

@@ -15,7 +15,7 @@ description:
   - Checks current package state before making changes to ensure idempotency.
 version_added: "0.1.0"
 author:
-  - Steve Fulmer
+  - Steve Fulmer (@stevefulme1)
 options:
   name:
     description:
