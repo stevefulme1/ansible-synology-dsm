@@ -8,7 +8,6 @@ __metaclass__ = type
 DOCUMENTATION = r'''
 ---
 name: dsm_inventory
-plugin_type: inventory
 short_description: Dynamic inventory from Synology DSM Virtual Machine Manager
 description:
   - Queries VMM guests on a Synology DSM device to build inventory.
@@ -44,7 +43,6 @@ options:
       - Password for authenticating to DSM.
     type: str
     required: true
-    secret: true
   validate_certs:
     description:
       - Whether to validate SSL certificates.
