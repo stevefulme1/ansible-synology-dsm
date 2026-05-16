@@ -79,7 +79,7 @@ def main():
         ),
         supports_check_mode=True,
     )
-    module.exit_json(changed=False, 2fas=[])
+    module.exit_json(changed=False, two_factor_auth_list=[])
 
 
 if __name__ == "__main__":
