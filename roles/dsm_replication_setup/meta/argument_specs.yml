@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Configure Snapshot Replication to remote"
+    options:
+      dsm_replication_setup_host:
+        description: Target host address
+        type: str
+        required: true
+      dsm_replication_setup_username:
+        description: Authentication username
+        type: str
+      dsm_replication_setup_password:
+        description: Authentication password
+        type: str
+      dsm_replication_setup_api_key:
+        description: API key for authentication
+        type: str
+      dsm_replication_setup_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      dsm_replication_setup_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

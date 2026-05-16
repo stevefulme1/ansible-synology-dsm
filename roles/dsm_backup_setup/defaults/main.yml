@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_backup_setup
+
+# Target host
+dsm_backup_setup_host: ""
+
+# Authentication
+dsm_backup_setup_username: ""
+dsm_backup_setup_password: ""
+dsm_backup_setup_api_key: ""
+
+# Behavior
+dsm_backup_setup_validate_certs: true
+dsm_backup_setup_state: present

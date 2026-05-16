@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_network_setup
+# Configure network interfaces and firewall
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_network_setup_host is defined
+    fail_msg: "dsm_network_setup_host must be defined"
+    quiet: true
+
+- name: Execute dsm network setup
+  ansible.builtin.debug:
+    msg: >-
+      Configure network interfaces and firewall.
+      Target: {{ dsm_network_setup_host }}

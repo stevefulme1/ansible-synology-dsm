@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Set up notifications and SNMP"
+    options:
+      dsm_monitoring_host:
+        description: Target host address
+        type: str
+        required: true
+      dsm_monitoring_username:
+        description: Authentication username
+        type: str
+      dsm_monitoring_password:
+        description: Authentication password
+        type: str
+      dsm_monitoring_api_key:
+        description: API key for authentication
+        type: str
+      dsm_monitoring_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      dsm_monitoring_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

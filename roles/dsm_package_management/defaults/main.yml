@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_package_management
+
+# Target host
+dsm_package_management_host: ""
+
+# Authentication
+dsm_package_management_username: ""
+dsm_package_management_password: ""
+dsm_package_management_api_key: ""
+
+# Behavior
+dsm_package_management_validate_certs: true
+dsm_package_management_state: present

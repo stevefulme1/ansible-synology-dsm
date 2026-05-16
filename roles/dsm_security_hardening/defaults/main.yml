@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_security_hardening
+
+# Target host
+dsm_security_hardening_host: ""
+
+# Authentication
+dsm_security_hardening_username: ""
+dsm_security_hardening_password: ""
+dsm_security_hardening_api_key: ""
+
+# Behavior
+dsm_security_hardening_validate_certs: true
+dsm_security_hardening_state: present

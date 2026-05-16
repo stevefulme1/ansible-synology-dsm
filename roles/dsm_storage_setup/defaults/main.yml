@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_storage_setup
+
+# Target host
+dsm_storage_setup_host: ""
+
+# Authentication
+dsm_storage_setup_username: ""
+dsm_storage_setup_password: ""
+dsm_storage_setup_api_key: ""
+
+# Behavior
+dsm_storage_setup_validate_certs: true
+dsm_storage_setup_state: present

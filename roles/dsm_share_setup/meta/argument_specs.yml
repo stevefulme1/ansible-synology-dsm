@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Configure shared folders with permissions"
+    options:
+      dsm_share_setup_host:
+        description: Target host address
+        type: str
+        required: true
+      dsm_share_setup_username:
+        description: Authentication username
+        type: str
+      dsm_share_setup_password:
+        description: Authentication password
+        type: str
+      dsm_share_setup_api_key:
+        description: API key for authentication
+        type: str
+      dsm_share_setup_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      dsm_share_setup_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

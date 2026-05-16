@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_user_management
+# Bulk user and group provisioning
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_user_management_host is defined
+    fail_msg: "dsm_user_management_host must be defined"
+    quiet: true
+
+- name: Execute dsm user management
+  ansible.builtin.debug:
+    msg: >-
+      Bulk user and group provisioning.
+      Target: {{ dsm_user_management_host }}

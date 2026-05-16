@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_monitoring
+
+# Target host
+dsm_monitoring_host: ""
+
+# Authentication
+dsm_monitoring_username: ""
+dsm_monitoring_password: ""
+dsm_monitoring_api_key: ""
+
+# Behavior
+dsm_monitoring_validate_certs: true
+dsm_monitoring_state: present

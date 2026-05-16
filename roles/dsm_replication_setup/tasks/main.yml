@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_replication_setup
+# Configure Snapshot Replication to remote
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_replication_setup_host is defined
+    fail_msg: "dsm_replication_setup_host must be defined"
+    quiet: true
+
+- name: Execute dsm replication setup
+  ansible.builtin.debug:
+    msg: >-
+      Configure Snapshot Replication to remote.
+      Target: {{ dsm_replication_setup_host }}

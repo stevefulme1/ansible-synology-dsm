@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_backup_setup
+# Configure Hyper Backup schedules
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_backup_setup_host is defined
+    fail_msg: "dsm_backup_setup_host must be defined"
+    quiet: true
+
+- name: Execute dsm backup setup
+  ansible.builtin.debug:
+    msg: >-
+      Configure Hyper Backup schedules.
+      Target: {{ dsm_backup_setup_host }}

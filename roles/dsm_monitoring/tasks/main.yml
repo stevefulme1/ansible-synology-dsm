@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_monitoring
+# Set up notifications and SNMP
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_monitoring_host is defined
+    fail_msg: "dsm_monitoring_host must be defined"
+    quiet: true
+
+- name: Execute dsm monitoring
+  ansible.builtin.debug:
+    msg: >-
+      Set up notifications and SNMP.
+      Target: {{ dsm_monitoring_host }}

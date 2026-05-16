@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_docker_setup
+
+# Target host
+dsm_docker_setup_host: ""
+
+# Authentication
+dsm_docker_setup_username: ""
+dsm_docker_setup_password: ""
+dsm_docker_setup_api_key: ""
+
+# Behavior
+dsm_docker_setup_validate_certs: true
+dsm_docker_setup_state: present

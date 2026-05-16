@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_share_setup
+
+# Target host
+dsm_share_setup_host: ""
+
+# Authentication
+dsm_share_setup_username: ""
+dsm_share_setup_password: ""
+dsm_share_setup_api_key: ""
+
+# Behavior
+dsm_share_setup_validate_certs: true
+dsm_share_setup_state: present

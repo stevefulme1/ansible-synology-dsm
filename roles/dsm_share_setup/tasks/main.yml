@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_share_setup
+# Configure shared folders with permissions
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_share_setup_host is defined
+    fail_msg: "dsm_share_setup_host must be defined"
+    quiet: true
+
+- name: Execute dsm share setup
+  ansible.builtin.debug:
+    msg: >-
+      Configure shared folders with permissions.
+      Target: {{ dsm_share_setup_host }}

@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_storage_setup
+# Create storage pools and volumes
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_storage_setup_host is defined
+    fail_msg: "dsm_storage_setup_host must be defined"
+    quiet: true
+
+- name: Execute dsm storage setup
+  ansible.builtin.debug:
+    msg: >-
+      Create storage pools and volumes.
+      Target: {{ dsm_storage_setup_host }}

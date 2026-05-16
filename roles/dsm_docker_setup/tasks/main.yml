@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_docker_setup
+# Configure Container Manager with containers
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_docker_setup_host is defined
+    fail_msg: "dsm_docker_setup_host must be defined"
+    quiet: true
+
+- name: Execute dsm docker setup
+  ansible.builtin.debug:
+    msg: >-
+      Configure Container Manager with containers.
+      Target: {{ dsm_docker_setup_host }}

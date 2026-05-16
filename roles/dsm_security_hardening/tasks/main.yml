@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_security_hardening
+# Apply DSM security best practices
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_security_hardening_host is defined
+    fail_msg: "dsm_security_hardening_host must be defined"
+    quiet: true
+
+- name: Execute dsm security hardening
+  ansible.builtin.debug:
+    msg: >-
+      Apply DSM security best practices.
+      Target: {{ dsm_security_hardening_host }}

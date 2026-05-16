@@ -1,0 +1,27 @@
+---
+argument_specs:
+  main:
+    short_description: "Bulk user and group provisioning"
+    options:
+      dsm_user_management_host:
+        description: Target host address
+        type: str
+        required: true
+      dsm_user_management_username:
+        description: Authentication username
+        type: str
+      dsm_user_management_password:
+        description: Authentication password
+        type: str
+      dsm_user_management_api_key:
+        description: API key for authentication
+        type: str
+      dsm_user_management_validate_certs:
+        description: Validate SSL certificates
+        type: bool
+        default: true
+      dsm_user_management_state:
+        description: Desired state
+        type: str
+        default: present
+        choices: [present, absent]

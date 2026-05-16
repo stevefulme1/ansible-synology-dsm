@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_user_management
+
+# Target host
+dsm_user_management_host: ""
+
+# Authentication
+dsm_user_management_username: ""
+dsm_user_management_password: ""
+dsm_user_management_api_key: ""
+
+# Behavior
+dsm_user_management_validate_certs: true
+dsm_user_management_state: present

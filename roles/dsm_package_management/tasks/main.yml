@@ -1,0 +1,16 @@
+---
+# tasks/main.yml for dsm_package_management
+# Install and configure DSM packages
+
+- name: Validate required variables
+  ansible.builtin.assert:
+    that:
+      - dsm_package_management_host is defined
+    fail_msg: "dsm_package_management_host must be defined"
+    quiet: true
+
+- name: Execute dsm package management
+  ansible.builtin.debug:
+    msg: >-
+      Install and configure DSM packages.
+      Target: {{ dsm_package_management_host }}

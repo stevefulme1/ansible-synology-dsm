@@ -1,0 +1,14 @@
+---
+# defaults/main.yml for dsm_network_setup
+
+# Target host
+dsm_network_setup_host: ""
+
+# Authentication
+dsm_network_setup_username: ""
+dsm_network_setup_password: ""
+dsm_network_setup_api_key: ""
+
+# Behavior
+dsm_network_setup_validate_certs: true
+dsm_network_setup_state: present
