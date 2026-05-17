@@ -47,7 +47,7 @@ options:
     description:
       - Whether to validate SSL certificates.
     type: bool
-    default: false
+    default: true
 '''
 
 EXAMPLES = r'''
@@ -80,7 +80,7 @@ class InventoryModule(BaseInventoryPlugin):
         return valid
 
     def _api_request(self, base_url, api, method, version=1, sid=None,
-                     extra_params=None, validate_certs=False):
+                     extra_params=None, validate_certs=True):
         """Make a request to the Synology DSM API."""
         params = dict(
             api=api,

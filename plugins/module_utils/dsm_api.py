@@ -16,7 +16,7 @@ dsm_argument_spec = dict(
     dsm_port=dict(type='int', default=5001),
     dsm_username=dict(type='str', required=True),
     dsm_password=dict(type='str', required=True, no_log=True),
-    validate_certs=dict(type='bool', default=False),
+    validate_certs=dict(type='bool', default=True),
 )
 
 
