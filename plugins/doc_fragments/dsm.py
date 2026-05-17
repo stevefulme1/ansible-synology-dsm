@@ -33,5 +33,5 @@ options:
     description:
       - Whether to validate SSL certificates when connecting to DSM.
     type: bool
-    default: false
+    default: true
 '''
