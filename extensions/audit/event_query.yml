@@ -1,0 +1,101 @@
+---
+# extensions/audit/event_query.yml
+# Maps Synology DSM module return values to the AAP Normalized Resource Taxonomy.
+# Return keys match the module's documented return field (e.g. vm, storage_pool).
+# Synology API returns "name" in each resource dict; guest_id is used for VMs.
+
+stevefulme1.synology_dsm.dsm_vmm:
+  query: >-
+    {
+      name: .vm.name,
+      canonical_facts: {
+        uuid: .vm.guest_id
+      },
+      facts: {
+        device_type: "virtual_machine"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_storage_pool:
+  query: >-
+    {
+      name: .storage_pool.name,
+      canonical_facts: {
+        uuid: .storage_pool.name
+      },
+      facts: {
+        device_type: "file_storage"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_volume:
+  query: >-
+    {
+      name: .volume.name,
+      canonical_facts: {
+        uuid: .volume.name
+      },
+      facts: {
+        device_type: "file_storage"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_shared_folder:
+  query: >-
+    {
+      name: .shared_folder.name,
+      canonical_facts: {
+        uuid: .shared_folder.name
+      },
+      facts: {
+        device_type: "file_storage"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_nfs_share:
+  query: >-
+    {
+      name: .nfs_share.name,
+      canonical_facts: {
+        uuid: .nfs_share.name
+      },
+      facts: {
+        device_type: "file_storage"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_iscsi_target:
+  query: >-
+    {
+      name: .iscsi_target.name,
+      canonical_facts: {
+        uuid: .iscsi_target.name
+      },
+      facts: {
+        device_type: "block_storage"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_iscsi_lun:
+  query: >-
+    {
+      name: .iscsi_lun.name,
+      canonical_facts: {
+        uuid: .iscsi_lun.name
+      },
+      facts: {
+        device_type: "block_storage"
+      }
+    }
+
+stevefulme1.synology_dsm.dsm_docker:
+  query: >-
+    {
+      name: .container.name,
+      canonical_facts: {
+        uuid: .container.name
+      },
+      facts: {
+        device_type: "container"
+      }
+    }
