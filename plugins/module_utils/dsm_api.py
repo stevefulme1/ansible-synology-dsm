@@ -50,12 +50,14 @@ class DSMClient(object):
             passwd=self.password,
             format='sid',
         )
-        url = '{0}/webapi/auth.cgi?{1}'.format(self._base_url, urlencode(params))
+        url = '{0}/webapi/auth.cgi'.format(self._base_url)
         try:
             response = open_url(
                 url,
-                method='GET',
+                method='POST',
+                data=urlencode(params),
                 validate_certs=self.validate_certs,
+                headers={'Content-Type': 'application/x-www-form-urlencoded'},
             )
             data = json.loads(response.read())
         except Exception as e:

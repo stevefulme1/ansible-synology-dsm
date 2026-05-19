@@ -119,8 +119,14 @@ class InventoryModule(BaseInventoryPlugin):
             passwd=password,
             format='sid',
         )
-        url = '{0}/webapi/auth.cgi?{1}'.format(base_url, urlencode(params))
-        response = open_url(url, method='GET', validate_certs=validate_certs)
+        url = '{0}/webapi/auth.cgi'.format(base_url)
+        response = open_url(
+            url,
+            method='POST',
+            data=urlencode(params),
+            validate_certs=validate_certs,
+            headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        )
         data = json.loads(response.read())
 
         if not data.get('success'):

@@ -96,7 +96,7 @@ def get_snmp_config(client):
 def main():
     argument_spec = dict(
         enabled=dict(type='bool', default=True),
-        community=dict(type='str', default='public'),
+        community=dict(type='str', default='public', no_log=True),
         version=dict(type='str', default='v1v2c', choices=['v1v2c', 'v3']),
         state=dict(type='str', default='present', choices=['present', 'absent']),
     )
