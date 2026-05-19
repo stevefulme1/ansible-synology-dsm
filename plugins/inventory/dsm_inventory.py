@@ -43,7 +43,6 @@ options:
       - Password for authenticating to DSM.
     type: str
     required: true
-    secret: true
   validate_certs:
     description:
       - Whether to validate SSL certificates.
