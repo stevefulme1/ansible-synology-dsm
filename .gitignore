@@ -19,3 +19,4 @@ credentials*
 
 # Logs
 *.log
+.ansible/

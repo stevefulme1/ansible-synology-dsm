@@ -5,6 +5,20 @@ All notable changes to **stevefulme1.synology_dsm** will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2026-05-20
+
+### Removed
+
+- Delete 23 fabricated stub `_info` modules that used a fake `host` parameter
+  and returned empty data instead of querying the Synology DSM API
+- Retain 70 modules that properly use `DSMClient` with real SYNO.* API calls
+
+### Fixed
+
+- Rename `update` return key to `update_status` in `dsm_update` module to fix
+  validate-modules bad-return-value-key finding
+- Add missing `MAINTAINERS.md` scaffolding file
+
 ## [2.1.2] - 2026-05-18
 
 ### Security

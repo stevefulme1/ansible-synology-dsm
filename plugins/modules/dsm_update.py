@@ -58,7 +58,7 @@ EXAMPLES = r'''
 '''
 
 RETURN = r'''
-update:
+update_status:
   description: Details about the update status.
   returned: always
   type: dict
@@ -143,7 +143,7 @@ def main():
     finally:
         client.logout()
 
-    module.exit_json(changed=changed, update=result)
+    module.exit_json(changed=changed, update_status=result)
 
 
 if __name__ == '__main__':
