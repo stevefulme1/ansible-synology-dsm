@@ -8,6 +8,7 @@ authors:
 description: Ansible collection for Synology DSM management
 license:
   - GPL-3.0-or-later
+  - GPL-3.0-or-later
 tags:
   - synology
   - dsm
