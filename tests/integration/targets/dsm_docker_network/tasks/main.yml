@@ -1,0 +1,122 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_docker_network
+# Full CRUD lifecycle: CREATE -> idempotency -> UPDATE -> DELETE -> idempotency
+
+- name: Test dsm_docker_network CRUD lifecycle
+  block:
+    - name: Create dsm_docker_network (check mode)
+      stevefulme1.synology_dsm.dsm_docker_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-net"
+        driver: "bridge"
+        subnet: "172.28.0.0/16"
+        gateway: "172.28.0.1"
+        state: present
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed
+
+    - name: Create dsm_docker_network
+      stevefulme1.synology_dsm.dsm_docker_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-net"
+        driver: "bridge"
+        subnet: "172.28.0.0/16"
+        gateway: "172.28.0.1"
+        state: present
+      register: create_result
+
+    - name: Verify create result
+      ansible.builtin.assert:
+        that:
+          - create_result is changed
+          - create_result.docker_network is defined
+
+    - name: Create dsm_docker_network again (idempotency)
+      stevefulme1.synology_dsm.dsm_docker_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-net"
+        driver: "bridge"
+        subnet: "172.28.0.0/16"
+        gateway: "172.28.0.1"
+        state: present
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_docker_network info
+      stevefulme1.synology_dsm.dsm_docker_network_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.docker_networks is defined or info_result.docker_network is defined
+
+    - name: Delete dsm_docker_network
+      stevefulme1.synology_dsm.dsm_docker_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-net"
+        state: absent
+      register: delete_result
+
+    - name: Verify delete result
+      ansible.builtin.assert:
+        that:
+          - delete_result is changed
+
+    - name: Delete dsm_docker_network again (idempotency)
+      stevefulme1.synology_dsm.dsm_docker_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-net"
+        state: absent
+      register: delete_idem_result
+
+    - name: Verify delete idempotency
+      ansible.builtin.assert:
+        that:
+          - delete_idem_result is not changed
+
+  always:
+    - name: Cleanup - ensure test resource is removed
+      stevefulme1.synology_dsm.dsm_docker_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-net"
+        state: absent
+      failed_when: false

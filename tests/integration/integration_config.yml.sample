@@ -1,0 +1,9 @@
+---
+# Synology DSM integration test configuration
+# Copy to integration_config.yml and fill in values
+
+dsm_host: "192.168.1.100"
+dsm_port: 5001
+dsm_username: "admin"
+dsm_password: "your-password-here"
+dsm_validate_certs: false

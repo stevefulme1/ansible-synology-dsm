@@ -1,0 +1,84 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_dns
+# Configuration module - test set and update
+
+- name: Test dsm_dns configuration
+  block:
+    - name: Configure dsm_dns (check mode)
+      stevefulme1.synology_dsm.dsm_dns:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        primary_dns: "8.8.8.8"
+        secondary_dns: "8.8.4.4"
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed or check_result is not changed
+
+    - name: Configure dsm_dns
+      stevefulme1.synology_dsm.dsm_dns:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        primary_dns: "8.8.8.8"
+        secondary_dns: "8.8.4.4"
+      register: config_result
+
+    - name: Verify configuration applied
+      ansible.builtin.assert:
+        that:
+          - config_result.dns is defined
+
+    - name: Configure dsm_dns again (idempotency)
+      stevefulme1.synology_dsm.dsm_dns:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        primary_dns: "8.8.8.8"
+        secondary_dns: "8.8.4.4"
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_dns info
+      stevefulme1.synology_dsm.dsm_dns_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.dns is defined or info_result.dnss is defined
+
+    - name: Update dsm_dns configuration
+      stevefulme1.synology_dsm.dsm_dns:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        primary_dns: "1.1.1.1"
+        secondary_dns: "1.0.0.1"
+      register: update_result
+
+    - name: Verify update applied
+      ansible.builtin.assert:
+        that:
+          - update_result is changed

@@ -1,0 +1,113 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_package
+# Full CRUD lifecycle: CREATE -> idempotency -> UPDATE -> DELETE -> idempotency
+
+- name: Test dsm_package CRUD lifecycle
+  block:
+    - name: Create dsm_package (check mode)
+      stevefulme1.synology_dsm.dsm_package:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "TextEditor"
+        state: present
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed
+
+    - name: Create dsm_package
+      stevefulme1.synology_dsm.dsm_package:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "TextEditor"
+        state: present
+      register: create_result
+
+    - name: Verify create result
+      ansible.builtin.assert:
+        that:
+          - create_result is changed
+          - create_result.package is defined
+
+    - name: Create dsm_package again (idempotency)
+      stevefulme1.synology_dsm.dsm_package:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "TextEditor"
+        state: present
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_package info
+      stevefulme1.synology_dsm.dsm_package_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.packages is defined or info_result.package is defined
+
+    - name: Delete dsm_package
+      stevefulme1.synology_dsm.dsm_package:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "TextEditor"
+        state: absent
+      register: delete_result
+
+    - name: Verify delete result
+      ansible.builtin.assert:
+        that:
+          - delete_result is changed
+
+    - name: Delete dsm_package again (idempotency)
+      stevefulme1.synology_dsm.dsm_package:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "TextEditor"
+        state: absent
+      register: delete_idem_result
+
+    - name: Verify delete idempotency
+      ansible.builtin.assert:
+        that:
+          - delete_idem_result is not changed
+
+  always:
+    - name: Cleanup - ensure test resource is removed
+      stevefulme1.synology_dsm.dsm_package:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "TextEditor"
+        state: absent
+      failed_when: false

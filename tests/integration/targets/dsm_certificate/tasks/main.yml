@@ -1,0 +1,19 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_certificate
+# Limited test - certificate operations require file paths
+
+- name: Test dsm_certificate info retrieval
+  block:
+    - name: Fetch dsm_certificate info
+      stevefulme1.synology_dsm.dsm_certificate_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.certificates is defined

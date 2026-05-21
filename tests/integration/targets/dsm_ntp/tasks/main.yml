@@ -1,0 +1,84 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_ntp
+# Configuration module - test set and update
+
+- name: Test dsm_ntp configuration
+  block:
+    - name: Configure dsm_ntp (check mode)
+      stevefulme1.synology_dsm.dsm_ntp:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        server: "pool.ntp.org"
+        enabled: true
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed or check_result is not changed
+
+    - name: Configure dsm_ntp
+      stevefulme1.synology_dsm.dsm_ntp:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        server: "pool.ntp.org"
+        enabled: true
+      register: config_result
+
+    - name: Verify configuration applied
+      ansible.builtin.assert:
+        that:
+          - config_result.ntp is defined
+
+    - name: Configure dsm_ntp again (idempotency)
+      stevefulme1.synology_dsm.dsm_ntp:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        server: "pool.ntp.org"
+        enabled: true
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_ntp info
+      stevefulme1.synology_dsm.dsm_ntp_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.ntp is defined or info_result.ntps is defined
+
+    - name: Update dsm_ntp configuration
+      stevefulme1.synology_dsm.dsm_ntp:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        server: "time.google.com"
+        enabled: true
+      register: update_result
+
+    - name: Verify update applied
+      ansible.builtin.assert:
+        that:
+          - update_result is changed

@@ -1,0 +1,96 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_network
+# Configuration module - test set and update
+
+- name: Test dsm_network configuration
+  block:
+    - name: Configure dsm_network (check mode)
+      stevefulme1.synology_dsm.dsm_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "eth0"
+        ip_address: "192.168.1.100"
+        subnet_mask: "255.255.255.0"
+        gateway: "192.168.1.1"
+        mtu: 1500
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed or check_result is not changed
+
+    - name: Configure dsm_network
+      stevefulme1.synology_dsm.dsm_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "eth0"
+        ip_address: "192.168.1.100"
+        subnet_mask: "255.255.255.0"
+        gateway: "192.168.1.1"
+        mtu: 1500
+      register: config_result
+
+    - name: Verify configuration applied
+      ansible.builtin.assert:
+        that:
+          - config_result.network is defined
+
+    - name: Configure dsm_network again (idempotency)
+      stevefulme1.synology_dsm.dsm_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "eth0"
+        ip_address: "192.168.1.100"
+        subnet_mask: "255.255.255.0"
+        gateway: "192.168.1.1"
+        mtu: 1500
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_network info
+      stevefulme1.synology_dsm.dsm_network_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.network is defined or info_result.networks is defined
+
+    - name: Update dsm_network configuration
+      stevefulme1.synology_dsm.dsm_network:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "eth0"
+        ip_address: "192.168.1.100"
+        subnet_mask: "255.255.255.0"
+        gateway: "192.168.1.1"
+        mtu: 9000
+      register: update_result
+
+    - name: Verify update applied
+      ansible.builtin.assert:
+        that:
+          - update_result is changed

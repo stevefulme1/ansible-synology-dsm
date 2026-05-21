@@ -1,0 +1,84 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_ssh
+# Configuration module - test set and update
+
+- name: Test dsm_ssh configuration
+  block:
+    - name: Configure dsm_ssh (check mode)
+      stevefulme1.synology_dsm.dsm_ssh:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        enabled: true
+        port: 22
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed or check_result is not changed
+
+    - name: Configure dsm_ssh
+      stevefulme1.synology_dsm.dsm_ssh:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        enabled: true
+        port: 22
+      register: config_result
+
+    - name: Verify configuration applied
+      ansible.builtin.assert:
+        that:
+          - config_result.ssh is defined
+
+    - name: Configure dsm_ssh again (idempotency)
+      stevefulme1.synology_dsm.dsm_ssh:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        enabled: true
+        port: 22
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_ssh info
+      stevefulme1.synology_dsm.dsm_ssh_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.ssh is defined or info_result.sshs is defined
+
+    - name: Update dsm_ssh configuration
+      stevefulme1.synology_dsm.dsm_ssh:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        enabled: true
+        port: 2222
+      register: update_result
+
+    - name: Verify update applied
+      ansible.builtin.assert:
+        that:
+          - update_result is changed

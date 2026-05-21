@@ -1,0 +1,141 @@
+---
+# Integration tests for stevefulme1.synology_dsm.dsm_iscsi_lun
+# Full CRUD lifecycle: CREATE -> idempotency -> UPDATE -> DELETE -> idempotency
+
+- name: Test dsm_iscsi_lun CRUD lifecycle
+  block:
+    - name: Create dsm_iscsi_lun (check mode)
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        location: "/volume1"
+        size: 1024
+        thin_provisioning: true
+        state: present
+      check_mode: true
+      register: check_result
+
+    - name: Verify check mode reports changed
+      ansible.builtin.assert:
+        that:
+          - check_result is changed
+
+    - name: Create dsm_iscsi_lun
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        location: "/volume1"
+        size: 1024
+        thin_provisioning: true
+        state: present
+      register: create_result
+
+    - name: Verify create result
+      ansible.builtin.assert:
+        that:
+          - create_result is changed
+          - create_result.iscsi_lun is defined
+
+    - name: Create dsm_iscsi_lun again (idempotency)
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        location: "/volume1"
+        size: 1024
+        thin_provisioning: true
+        state: present
+      register: idem_result
+
+    - name: Verify idempotency
+      ansible.builtin.assert:
+        that:
+          - idem_result is not changed
+
+    - name: Fetch dsm_iscsi_lun info
+      stevefulme1.synology_dsm.dsm_iscsi_lun_info:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+      register: info_result
+
+    - name: Verify info returns data
+      ansible.builtin.assert:
+        that:
+          - info_result.iscsi_luns is defined or info_result.iscsi_lun is defined
+
+    - name: Update dsm_iscsi_lun
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        location: "/volume1"
+        size: 2048
+        thin_provisioning: true
+        state: present
+      register: update_result
+
+    - name: Verify update result
+      ansible.builtin.assert:
+        that:
+          - update_result is changed
+
+    - name: Delete dsm_iscsi_lun
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        state: absent
+      register: delete_result
+
+    - name: Verify delete result
+      ansible.builtin.assert:
+        that:
+          - delete_result is changed
+
+    - name: Delete dsm_iscsi_lun again (idempotency)
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        state: absent
+      register: delete_idem_result
+
+    - name: Verify delete idempotency
+      ansible.builtin.assert:
+        that:
+          - delete_idem_result is not changed
+
+  always:
+    - name: Cleanup - ensure test resource is removed
+      stevefulme1.synology_dsm.dsm_iscsi_lun:
+        dsm_host: "{{ dsm_host }}"
+        dsm_port: "{{ dsm_port | default(5001) }}"
+        dsm_username: "{{ dsm_username }}"
+        dsm_password: "{{ dsm_password }}"
+        validate_certs: "{{ dsm_validate_certs | default(false) }}"
+        name: "test-ansible-lun"
+        state: absent
+      failed_when: false
