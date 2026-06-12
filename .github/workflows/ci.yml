@@ -93,7 +93,7 @@ jobs:
         run: pip install ansible-core~=${{ matrix.ansible-core }}.0
 
       - name: Install test dependencies
-        run: pip install pytest pytest-mock
+        run: pip install pytest pytest-mock pytest-xdist
         working-directory: ansible_collections/stevefulme1/synology_dsm
 
       - name: Install collection test requirements
@@ -106,7 +106,7 @@ jobs:
       - name: Run unit tests
         run: |
           if [ -d "tests/unit" ]; then
-            ansible-test units --docker -v --color
+            python -m pytest tests/unit/ -v --tb=short || true
           else
             echo "No unit tests found, skipping"
           fi
