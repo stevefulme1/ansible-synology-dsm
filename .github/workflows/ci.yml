@@ -92,6 +92,17 @@ jobs:
       - name: Install ansible-core
         run: pip install ansible-core~=${{ matrix.ansible-core }}.0
 
+      - name: Install test dependencies
+        run: pip install pytest pytest-mock
+        working-directory: ansible_collections/stevefulme1/synology_dsm
+
+      - name: Install collection test requirements
+        run: |
+          if [ -f tests/unit/requirements.txt ]; then
+            pip install -r tests/unit/requirements.txt
+          fi
+        working-directory: ansible_collections/stevefulme1/synology_dsm
+
       - name: Run unit tests
         run: |
           if [ -d "tests/unit" ]; then
